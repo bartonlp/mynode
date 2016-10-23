@@ -1,0 +1,93 @@
+doctype html
+html(lang='en')
+  head
+    title #{args.title}
+    meta(name=viewport content="width=device-width, initial-scale=1")
+    meta(charset='utf-8')
+    meta(name="copyright" content="#{args.copyright}")
+    meta(name="Author" content="#{args.author}")
+    meta(name="description" content="#{args.desc}")
+    meta(name="keywords" content="Barton Phillips")
+    
+    link(rel="stylesheet" href="http://www.applitec.com/css/nav.css")
+    link(rel="stylesheet" href="http://www.applitec.com/css/applitec.css")
+
+    style.
+      #hitCounter { margin-left: auto; margin-right: auto; width: 50%; text-align: center; }
+      #hitCountertbl { font-size: 1em; width: 0; border: 8px ridge yellow; margin-left: auto; margin-right: auto; background-color: #F5DEB3 }
+      #hitCounterth { color: rgb(123, 16, 66); }
+      .underline { 	text-decoration: underline; }
+
+    block stylesheets
+
+    script(src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js")
+    //- we commented this out
+    //- script(async src="http://bartonphillips.net/js/tracker.js")
+    //- script var lastId=#{args.lastId}
+    
+    block jscripts
+
+  body
+    block header
+      header
+        #topTitleDiv
+          a(href="/applitec") Applied Technology Resources,&nbsp;Inc.
+
+          img(id='logo' src='http://bartonphillips.net/images/blank.png')
+          //-img(id='dummyimg' src='/tracker.php?page=normal&id=$this->LAST_ID')
+        nav
+          #navMap
+            ul
+              li: a(href="/applitec/sitemap") Site Map 
+              li: a(href="/applitec/atribio") Company Information 
+              li: a(href="/applitec/reference") References 
+              li: a(href="/applitec/contactus") Contact Us 
+          // Nav bar for small screens
+          #smallNavMap
+            label(for="smallmenu" class="icon-menu") Menu
+            input(type="checkbox" id="smallmenu" role="button")
+            ul#smenu
+              li: a(href="/applitec") Home
+              li: a(href="/applitec/sitemap") Site Map
+              li: a(href="/applitec/atribio") Company Info
+              li: a(href="/applitec/reference") References
+              li: a(href="contactus") Contact Us
+
+        noscript
+          p(style='color: red; background-color: #FFE4E1; padding: 10px').
+            Your browser either does not support <b>JavaScripts</b> or you have JavaScripts disabled, 
+            in either case your browsing experience will be significantly impaired. 
+            If your browser supports JavaScripts but you have it disabled consider enabaling
+            JavaScripts conditionally if your browser supports that. Sorry for the inconvienence.
+
+    block content    
+
+    footer
+      |Return to Applitec 
+      a.underline(href="/applitec") Home Page
+
+      h2.center: a(href="/applitec/webstats") Web Stats
+        br
+        a(href="/applitec/aboutwebsite") About This Site
+      address
+        |Copyright &copy; #{args.copyright}
+        br
+        |23542 Lyons Ave. #209
+        br
+        |Newhall, CA 91321
+        br
+        a(href="mailto:barton@applitec.com?SUBJECT=WebMaster+feedback") webmaster@applitec.com
+        br
+        |Phone: (818)652-9849
+      hr
+
+      div.center #{args.msg}
+
+      #hitCounter
+        table#hitCountertbl
+          tr#hitCountertr
+            th#hitCounterth #{args.footer}
+
+      p.center Last Modified: #{args.mtime}
+  body
+html

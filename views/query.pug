@@ -1,0 +1,42 @@
+extends layout
+
+append stylesheets
+  style.
+    input { font-size: 1rem; }
+    #sql { width: 80%; }
+    h1 { font-family: Rancho, serif; }
+    #query-results { border: 1px solid black; width: 100%; height: 20rem; overflow: auto; }
+    #query-results table { width: 100%; font-size: .7em; }
+    #query-results td, #query-results th { border: 1px solid black; padding: .5em; }
+
+block content 
+  p. 
+    Enter your query:
+
+  form(method='post' action='query')
+    input(id='sql' type='text' name='sql' value='#{sql}' placeholder='Enter SQL statement' autofocus)
+    br
+    input(type='submit' value="Submit")
+
+  if result
+    br
+    #query-results
+      if type == "Array"
+        table
+          thead
+            tr
+              each item, key in result[0]
+                th= key
+          tbody
+            each c in result
+              tr
+                each item in c
+                  td= item
+      else
+        if result && typeof result.affectedRows != 'undefined'
+          li.red affectedRows: !{result.affectedRows}
+        if result && typeof result.insertId != 'undefined'
+          li.red insertId: !{result.insertId}
+        if result && typeof result.message != 'undefined'
+          li.red message: !{result.message}
+

@@ -1,0 +1,41 @@
+//const nodemailer = require('nodemailer');
+//const smtpTransport = require('nodemailer-smtp-transport');
+
+// Either this
+//var transporter = nodemailer.createTransport(smtpTransport('smtps://bartonphillips%40gmail.com:7098653Blp@smtp.gmail.com'));
+// or this
+/*
+  var authConfig = {user: 'bartonphillips@gmail.com', pass: '7098653Blp'};
+  var transporter = nodemailer.createTransport(smtpTransport({
+    service: 'gmail',
+    debug: true,
+    auth: authConfig,
+  }));
+*/
+// Then this
+/*  
+  transporter.verify(function(error, success) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('verify: Server is ready to take our messages');
+    }
+  });
+
+  var mailOptions = {
+    from: 'barton@bartonlp.org', // sender address
+    to: 'bartonphillips@gmail.com', // list of receivers
+    subject: 'TEST', // Subject line
+    text: 'Hello world ?', // plaintext body
+    html: '<b>Hello world ?</b>' // html body
+  };
+
+  transporter.sendMail(mailOptions, function(err, info){
+    if(err){
+      next(err);
+      return;
+    }
+    console.log('sendMail: ', info.response);
+    res.end("Done");
+  });
+*/

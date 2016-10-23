@@ -1,0 +1,8 @@
+extends layoutError
+
+block content
+  h1 #{message}, #{status}
+  if status != null
+    h2 '<i>#{url}</i> ' was not found on this server.
+
+  pre= error.stack

@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: http://www.bartonlp.org:8080/Sitemap.xml

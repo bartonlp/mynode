@@ -1,0 +1,47 @@
+extends layout.jade
+
+append jscripts
+  script(src="javascripts/syntaxhighlighter.js")
+
+  script.
+    jQuery(document).ready(function($) {
+      $("pre").addClass("brush: js");
+    });
+
+  //script SyntaxHighlighter.all();
+
+append stylesheets
+  //link(rel="stylesheet" href="http://bartonphillips.net/css/shCoreDefault.css")
+  link(rel="stylesheet" href="stylesheets/theme.css")
+  style.
+    .syntaxhighlighter {
+      height: 10rem;
+      font-size: .8rem !important;
+    }
+
+block content 
+  p.
+    The application is written for 'node.js' using 'express.js' and some other modules. Express is a framework
+    used to create a server and router. The 'express' directory hierarchy looks like this:
+  ul
+    li Project root
+    ul
+      li bin
+      li node_modules
+      li public
+      li routes
+      li views
+
+  p.
+    In the project root is the 'app.js' file which looks like this:
+  pre #{code1}
+
+  p.
+    We load <b>./routes/index.js'</b> and then we <b>app.use('/', routes)</b>.
+  p.
+    In the 'routes' directory the file 'index.js' does the routing for the application.
+  pre #{code2}
+  
+block footer
+
+
