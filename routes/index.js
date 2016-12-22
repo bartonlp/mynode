@@ -142,51 +142,6 @@ router.get('/aboutwebsite', function(req, res, next) {
   });
 });
 
-// Webstats
-
-router.get('/webstats', function(req, res, next) {
-  args.mtime = mtime('webstats');
-  args.footer = req.cnt;
-  
-  return run(function *(resume) {
-    try {
-      var sql = "select filename, ip, agent, count, concat(date(lasttime), ' ', time(lasttime)) as lasttime "+
-                "from barton.counter "+
-                "where site=? and lasttime>current_date() order by lasttime desc";
-
-      var counter = yield query(sql, [args.site],  resume);
-
-      sql = "select * from barton.bots where lasttime>current_date() order by lasttime desc";
-      var bots = yield query(sql, resume);
-
-      sql = "select * from barton.bots2 where lasttime>current_date() order by lasttime desc";
-      var bots2 = yield query(sql, resume);
-
-      sql = "select site, page, ip, agent, concat(date(starttime), ' ', time(starttime)) as starttime, "+
-            "concat(date(endtime), ' ', time(endtime)) as endtime, hex(isJavaScript) as isJS "+
-            "from barton.tracker where lasttime>current_date() order by lasttime desc";
-      var tracker = yield query(sql, resume);
-
-      sql = "select site, date_format(`date`, '%Y-%m-%d') as `date`, `real`, bots, visits, "+
-            "concat(date(lasttime), ' ', time(lasttime)) as lasttime "+
-            "from daycounts where lasttime>current_date() order by lasttime desc";
-
-      var daycounts = yield query(sql, resume);
-
-      res.render('webstats', {
-        args: args,
-        counter: counter,
-        bots: bots,
-        bots2: bots2,
-        tracker: tracker,
-        daycounts: daycounts,
-      });
-    } catch(err) {
-      return next(err);
-    }
-  });
-});
-
 // Markdown
 
 router.get('/markdown', function(req, res, next) {
