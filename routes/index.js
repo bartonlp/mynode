@@ -12,10 +12,10 @@ const run = utilfunctions.run;
 const robots = utilfunctions.robots;
 
 var args = {
-  copyright: "2016 Barton Phillips",
+  copyright: "2017 Barton Phillips",
   author: "Barton Phillips http://www.bartonphillips.com",
   desc: "node.js example",
-  msg: "Counter Reset Sep 20, 2016",
+  msg: "Counter Reset: Feb. 4, 2017",
   site: "Node",
 };
 

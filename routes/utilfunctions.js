@@ -8,6 +8,7 @@ const dns = require('dns');
 // Create the mysql connection pool
 
 const pool = mysql.createPool({
+  // We are useing LOCALHOST not bartonlp.com!
   host: "localhost", //"bartonlp.com",
   user: "barton",
   password: "7098653",

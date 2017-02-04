@@ -13,11 +13,11 @@ const robots = utilfunctions.robots;
 const email = require('emailjs');
 
 var args = {
-  copyright: "2016 Applied Technology Resources Inc.",
+  copyright: "2017 Applied Technology Resources Inc.",
   title: "Applitec Inc.",
   author: "Barton Phillips",
   desc: "a test program",
-  msg: "Content Reset Sep. 20, 2016",
+  msg: "Content Reset: Feb. 4, 2017",
   site: "Applitec",
 };
 
