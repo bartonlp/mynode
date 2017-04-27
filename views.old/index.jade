@@ -2,31 +2,18 @@ extends layout.jade
 
 append stylesheets
   style.
-    #info { border: 1px solid black; width: 100%; height: 20rem; overflow: auto; }
+    #info { border: 1px solid black; width: 100%; max-height: 20rem; overflow: auto; }
     #info table { widht: 100%; }
     #info td, #info th { border: 1px solid black; padding: .5rem; }
 
 block content 
   p.
-    This page is on port #{args.port} and your can do the following:
-  ul
-    li This is the root or '/'.
-    li
-      | If you enter 
-      a(href='http://www.bartonlp.org:#{args.port}/applitec') http://www.bartonlp.org:#{args.port}/applitec
-      |  you will get my Applitec node.js page.
-    li. 
-      If you enter 
-      <a href='http://www.bartonlp.org:#{args.port}/query'>http://www.bartonlp.org:#{args.port}/query</a> 
-      you will get a page that lets you run a mysql query against the database. The databases are 'barton' and 'nodetest'.
-      There are two tables 'barton.counter' and 'nodetest.mynode'. 
-    li.
-      If you enter 
-      <a href='http://www.bartonlp.org:#{args.port}/howitworks'>http://www.bartonlp.org:#{args.port}/howitworks</a> 
-      you will get a page that explains how the application works.
+    This page is on port #{args.port} and is written using <b>node.js</b> and <b>express.js</b>.
+  p This is the root or '/'.
 
   p. 
-    While this may not seem like a wonderful thing it is interesting. I have used 'express' as the framework.
+    While this may not seem like a wonderful thing it is interesting. I have used <b>express</b>
+    as the framework.
     For details on the implementation 
     <a href="http://www.bartonlp.org:#{args.port}/howitworks">How It Works</a>.
 
@@ -47,3 +34,7 @@ block content
             tr
             each item in c
               td= item
+
+  div. 
+    !{args.adminStuff}
+

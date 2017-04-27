@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: http://www.bartonlp.org:8080/Sitemap.xml
+Sitemap: http://www.bartonlp.org:7000/Sitemap.xml

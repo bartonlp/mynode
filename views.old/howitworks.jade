@@ -6,23 +6,27 @@ append jscripts
   script.
     jQuery(document).ready(function($) {
       $("pre").addClass("brush: js");
+      $(".nopre").removeClass("brush: js");
     });
 
-  //script SyntaxHighlighter.all();
-
 append stylesheets
-  //link(rel="stylesheet" href="http://bartonphillips.net/css/shCoreDefault.css")
   link(rel="stylesheet" href="stylesheets/theme.css")
   style.
     .syntaxhighlighter {
       height: 10rem;
       font-size: .8rem !important;
     }
+    .nopre {
+      font-size: .8rem;
+      border-left: .5rem solid gray;
+      padding-left: .5rem;
+    }
 
 block content 
   p.
-    The application is written for 'node.js' using 'express.js' and some other modules. Express is a framework
-    used to create a server and router. The 'express' directory hierarchy looks like this:
+    The application is written for <b>node.js</b> using <b>express.js</b> and some other modules. 
+    Express is a framework used to create a server and router. 
+    The <b>express</b> directory hierarchy looks like this:
   ul
     li Project root
     ul
@@ -33,15 +37,40 @@ block content
       li views
 
   p.
-    In the project root is the 'app.js' file which looks like this:
+    In the project root is the <b>app.js</b> file which looks like this:
   pre #{code1}
 
   p.
     We load <b>./routes/index.js'</b> and then we <b>app.use('/', routes)</b>.
   p.
-    In the 'routes' directory the file 'index.js' does the routing for the application.
+    In the <b>routes</b> directory the file <b>index.js</b> does the routing for the application.
   pre #{code2}
-  
+  p. 
+    The <b>utilfunctions.js</b> has almost all the rest of the logic needed. The actual connection
+    to the database is in a seperate file called <b>createpool.js</b> which only does a <br>  
+  pre(class='nopre').
+    const mysql = require('mysql');
+    const pool = mysql.createPool({
+      host: "localhost",
+      user: "USERNAME",  
+      password: "PASSWORD",  
+      database: "DATABASENAME",  
+    });
+  p.
+    Replace the UPPERCASE values with real mysql database information.
+  b utilfunctions.js
+  pre #{code3}
+  p.
+    The <b>views</b> directory has the main page and the <b>howitworks.jade</b> page
+  b index.jade:
+  pre #{code4}
+  b howitworks.jade:
+  pre #{code5}
+  p.
+    Finally <b>layout.jade</b> looks like this
+  b layout.jade:
+  pre #{code6}
+
 block footer
 
 

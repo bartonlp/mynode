@@ -1,22 +1,8 @@
 /* Utility Functions */
 
 const mysql = require('mysql');
-const date = require("../public/javascripts/phpdate.js").date; // Does dates like PHP
 const fs = require('fs');
-const dns = require('dns');
-
-// Create the mysql connection pool
-
-const pool = mysql.createPool({
-  // We are useing LOCALHOST not bartonlp.com!
-  host: "localhost", //"bartonlp.com",
-  user: "barton",
-  password: "7098653",
-  //socketPath: "/var/run/mysqld/mysqld.sock", // for local host,
-  database: "barton",
-});
-
-exports.pool = pool;
+const pool = require('../routes/createpool.js').pool;
 
 // Do a mysql query
 
@@ -33,9 +19,9 @@ const query = function(sql, value, cb) {
     }
 
     con.query(sql, value, function(err, result) {
-//      if(err) {
-//        console.log("SQLERROR: ", err);
-//      }
+      if(err) {
+        console.log("SQLERROR: ", err);
+      }
       con.release();
       return cb(err, result);
     });
@@ -54,7 +40,6 @@ function run(gen, iter) {
 
 exports.count = function(req, cb) {
   var site = req.originalUrl.match(/^\/applitec/i) == null ? 'Node' : 'Applitec';
-  //console.log("site: ", site);
   var file = req.originalUrl.match(/^.*?(\/.*)$/)[1];
 
   return run(function *(resume) {
@@ -62,8 +47,6 @@ exports.count = function(req, cb) {
       var agent = req.headers['user-agent'];
       var ip = req._remoteAddress.replace(/::.*?:/, '');
 
-      //console.log("site: ", site);
-      
       var sql = "insert into counter (filename, site, ip, agent, count, lasttime) "+
                 "values(?, ?, ?, ?, 1, now()) "+
                 "on duplicate key update site=?, ip=?, agent=?, count=count+1, lasttime=now()";
@@ -78,11 +61,6 @@ exports.count = function(req, cb) {
 
       var cnt = result[0].count;
 
-      // If its me should I count?
-      // Not used yet
-      //var address = yield dns.resolve4('bartonlp.org', resume);
-      //console.log("ADDRESS: ", address[0]);
-      
       sql = "select count(*) as one from information_schema.tables "+
             "where (table_schema = 'barton') and (table_name = 'bots')";
       
@@ -174,7 +152,7 @@ exports.count = function(req, cb) {
         sql = "insert into barton.daycounts (site, `date`, `real`, bots, members, visits, lasttime) "+
               "values(?, now(), ?, ?, 0, 1, now()) " +
               "on duplicate key update `real`=`real`+?, bots=bots+?, visits=visits+1, lasttime=now()";
-        //console.log(sql);
+
         result = yield query(sql, [site, real, bots, real, bots], resume);
       }
 
@@ -229,4 +207,3 @@ exports.robots = function(site, req, cb) {
     }
   });
 }
-

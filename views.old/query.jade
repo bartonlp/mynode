@@ -18,7 +18,7 @@ block content
     br
     input(type='submit' value="Submit")
 
-  if result
+  if result[0]
     br
     #query-results
       if type == "Array"
@@ -40,3 +40,5 @@ block content
         if result && typeof result.message != 'undefined'
           li.red message: !{result.message}
 
+  else
+    p No Results Found

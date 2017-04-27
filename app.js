@@ -1,4 +1,5 @@
-// Test app.js
+// BLP 2017-03-07 -- This is a nodjs experment. It creates the
+// www.bartonlp.org:7000 webpage.
 
 const express = require('express');
 const path = require('path');
@@ -8,21 +9,20 @@ const bodyParser = require('body-parser');
 const favicon = require('serve-favicon');
 const count = require('./routes/utilfunctions.js').count;
 
-// get the two routing units
+// get the routing unit
 
 const routes = require('./routes/index');
-const applitec = require('./routes/applitec');
-
 const app = express();
 
 // view engine setup
 
+// NOTE we are using 'views.old' which is the 'jade' implementation not
+// 'view' which uses 'pug'!!
+
 app.set('views', path.join(__dirname, 'views.old'));
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
-
-//app.use(logger('combined')); // Logs info to the console.log in 'development' mode
+//app.use(logger(...)); // Logs info to the console.log in 'development' mode
 
 app.use(logger('[:date[clf]] :remote-addr :remote-user :method :url :status :res[content-length] ":user-agent"'));
 
@@ -39,7 +39,8 @@ app.use(function(req, res, next) {
   next();
 });
 
-/* Catch all. This goes before any router methods. This does the
+/*
+ * This goes before any router methods. This does the
  * counter and bots logic.
  */
 
@@ -67,7 +68,7 @@ app.use(cookieParser());
 // Now override this with the 'routes' to .../routes/index.js
 
 app.use('/', routes);
-app.use('/applitec', applitec);
+
 // Set the document root to 'public'
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -81,11 +82,11 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-// error handlers
-
 // development error handler
 // will print stacktrace
 
+// To remove development mode set the 'env' to blank. Uncomment to
+// disable development.
 //app.set('env', '');
 
 if(app.get('env') === 'development') {
