@@ -33,8 +33,8 @@ router.get(['/','/index(\.(html|php))?'], function(req, res, next) {
       var address = yield   dns.lookup('bartonphillips.dyndns.org', resume);
       console.log("ADDRESS:", address);
     
-      var admin = yield request.get('http://www.bartonlp.com/adminsites.txt', resume);
-      args.adminStuff = admin.body;
+      //var admin = yield request.get('http://www.bartonlp.com/adminsites.txt', resume);
+      //args.adminStuff = admin.body;
       //console.log("adminStuff: ", args.adminStuff);
     } catch(err) {
       console.log("NOT bartonphillips.dyndns.org");
