@@ -53,6 +53,7 @@ router.get(['/','/index(\.(html|php))?'], function(req, res, next) {
       args.banner = "Node.js Page";
       args.port = port;
       args.mtime = mtime("index");
+      //console.log("mtime: "+args.mtime);
       
       res.render('index', {
         result: result,
@@ -110,17 +111,6 @@ router.get('/aboutwebsite', function(req, res, next) {
   args.footer = req.cnt;
 
   res.render('aboutwebsite', {
-    args: args,
-  });
-});
-
-// Markdown
-
-router.get('/markdown', function(req, res, next) {
-  args.mtime = mtime('markdown');
-  args.footer = req.cnt;
-
-  res.render("markdown", {
     args: args,
   });
 });

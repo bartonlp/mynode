@@ -166,7 +166,17 @@ exports.count = function(req, cb) {
 // Get last modified time
 
 exports.mtime = function(pugfile) {
-  return String(new Date(fs.statSync("/var/www/mynode/views/"+pugfile+".pug").mtime)).replace(/GMT.*? /, '');
+  // we are using the views.old which has .jade not .pug files
+/*
+return String(new Date(fs.statSync("/var/www/mynode/views/"+pugfile+".pug").mtime)).replace(/GMT.*? /, '');
+*/
+
+  // Note: mtime has '<date> GMT-nnnn (PDT)' and we want just the (PDT)
+  // after the GMT-nnnn
+  
+  var stat = String(new Date(fs.statSync("/var/www/mynode/views.old/"+pugfile+".jade").mtime));
+  //console.log("statSync: ", stat);
+  return stat.replace(/GMT.*? /, '');
 }
 
 exports.run = function(gen, iter) {
@@ -179,10 +189,12 @@ exports.robots = function(site, req, cb) {
   
   return run(function *(resume) {
     try {
+      console.log("try insert");
       var result = yield query("insert into barton.bots (ip, agent, count, robots, who, creation_time, lasttime) "+
                                "values(?, ?, 1, 1, ?, now(), now())", [ip, agent, site], resume);
     } catch(err) {
       if(err.errno == 1062) { // dup key
+        console.log("catch dup key");
         var who = (yield query("select who from barton.bots where ip=? and agent=?", [ip, agent], resume))[0].who;
         if(!who) {
           who = site;

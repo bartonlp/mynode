@@ -5,6 +5,13 @@ append stylesheets
     #info { border: 1px solid black; width: 100%; max-height: 20rem; overflow: auto; }
     #info table { widht: 100%; }
     #info td, #info th { border: 1px solid black; padding: .5rem; }
+    #show {width: 20rem; margin: auto;}
+    #show img {width: 100%;}
+
+append jscripts
+  script(src="https://bartonphillips.net/js/random.js")
+  script(src="https://bartonphillips.net/js/ximage.js")
+  script dobanner("Pictures/PasoRobles2013/*.JPG", 'no')
 
 block content 
   p.
@@ -35,3 +42,6 @@ block content
             each item in c
               td= item
 
+  br
+
+  #show
