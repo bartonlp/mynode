@@ -2,46 +2,26 @@ extends layout.jade
 
 append stylesheets
   style.
-    #info { border: 1px solid black; width: 100%; max-height: 20rem; overflow: auto; }
-    #info table { widht: 100%; }
-    #info td, #info th { border: 1px solid black; padding: .5rem; }
     #show {width: 20rem; margin: auto;}
     #show img {width: 100%;}
 
 append jscripts
+  // Because the images are done via java script the only code that needs to be 
+    added is here in the jade file. The dobanner function is from ximage.js and 
+    puts its code in #show below.
+
   script(src="https://bartonphillips.net/js/random.js")
   script(src="https://bartonphillips.net/js/ximage.js")
   script dobanner("Pictures/PasoRobles2013/*.JPG", 'no')
 
 block content 
   p.
-    This page is on port #{args.port} and is written using <b>node.js</b> and <b>express.js</b>.
-  p This is the root or '/'.
+    This page is on port #{args.port} and is written using <b>node.js</b> with <b>express.js</b>.
 
   p. 
     While this may not seem like a wonderful thing it is interesting. I have used <b>express</b>
     as the framework.
     For details on the implementation 
     <a href="http://www.bartonlp.org:#{args.port}/howitworks">How It Works</a>.
-
-  h3 The following is from my mysql 'barton.counter' table
-  p You should see your IP and Agent in the list.
-
-  #info
-    if result[0] == null
-      h3 Counter Table Empty
-    else
-      table
-        thead
-          tr
-          each item, key in result[0]
-            th= key
-        tbody
-          each c in result
-            tr
-            each item in c
-              td= item
-
-  br
-
+  // The #show div is where the image goes from dobanner().
   #show

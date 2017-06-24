@@ -39,26 +39,15 @@ router.get(['/','/index(\.(html|php))?'], function(req, res, next) {
     } catch(err) {
       console.log("NOT bartonphillips.dyndns.org");
     }
-  
-    var sql = "select filename, site, ip, agent, count, concat(date(lasttime), ' ', time(lasttime)) as lasttime "+
-              "from barton.counter where lasttime>current_date() order by lasttime desc";
 
-    query(sql, function(err, result) {
-      if(err) {
-        next(err); //new Error('Error: '+err));
-        return;
-      };
-
-      args.title = 'Node.js';
-      args.banner = "Node.js Page";
-      args.port = port;
-      args.mtime = mtime("index");
-      //console.log("mtime: "+args.mtime);
+    args.title = 'Node.js';
+    args.banner = "Node.js Page";
+    args.port = port;
+    args.mtime = mtime("index");
+    //console.log("mtime: "+args.mtime);
       
-      res.render('index', {
-        result: result,
-        args: args,
-      });
+    res.render('index', {
+      args: args,
     });
   });
 });
