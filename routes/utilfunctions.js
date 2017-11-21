@@ -18,11 +18,19 @@ const query = function(sql, value, cb) {
       return cb(err);
     }
 
+    // the query takes two aruments and a callback function.
+    // sql is the sql statement
+    // and value (if any) is the values for the sql statement is if has
+    // the form 'select count from barton.counter where site=?'
+    
     con.query(sql, value, function(err, result) {
-      if(err) {
-        console.log("SQLERROR: ", err);
-      }
+      // We don't want this message printed.
+      //if(err) {
+      //  console.log("SQLERROR", err);
+      //}
+
       con.release();
+      //console.log("RESULT", result);
       return cb(err, result);
     });
   });
@@ -31,9 +39,27 @@ const query = function(sql, value, cb) {
 exports.query = query;
 
 // run is a little helper
+// 'gen' is a function iterator
 
-function run(gen, iter) {
-  (iter = gen((err, data) => (err && iter.throw(err)) || iter.next(data))).next();
+function run(gen) {
+  // These two are the same. One uses normal function(...) format and the other
+  // uses the new '=>' notation
+  var iter = gen(function(err, data) {
+    if(err) {
+      iter.throw(err);
+    } else {
+      iter.next(data);
+    }
+  });
+
+  iter.next();
+  
+  // We run gen() it returns an object to iter not a value.
+  // Instead the flow goes directly to the iter.next() which initalizes
+  // the iterator.
+  // When the 
+  //  (iter = gen((err, data) => (err && iter.throw(err)) ||
+  //                           iter.next(data))).next();
 }
 
 // Count the number of hits. Bots and Bots2
@@ -42,7 +68,20 @@ exports.count = function(req, cb) {
   var site = req.originalUrl.match(/^\/applitec/i) == null ? 'Node' : 'Applitec';
   var file = req.originalUrl.match(/^.*?(\/.*)$/)[1];
 
-  return run(function *(resume) {
+  // This is the syntax for a generator. That is a function that has
+  // 'yield' statements in it.
+  // function* (resume)
+  
+  return run(function* (resume) {
+    // resume looks like:
+    // function(err, data) {
+    //   if(err) {
+    //     iter.throw(err);
+    //   } else {
+    //     iter.next(data);
+    //   }
+    // }
+
     try {
       var agent = req.headers['user-agent'];
       var ip = req._remoteAddress.replace(/::.*?:/, '');
@@ -187,7 +226,7 @@ exports.robots = function(site, req, cb) {
   var agent = req.headers['user-agent'];
   var ip = req._remoteAddress.replace(/::.*?:/, '');
   
-  return run(function *(resume) {
+  return run(function* (resume) {
     try {
       console.log("try insert");
       var result = yield query("insert into barton.bots (ip, agent, count, robots, who, creation_time, lasttime) "+

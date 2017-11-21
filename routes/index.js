@@ -13,6 +13,7 @@ const mtime = utilfunctions.mtime;
 const run = utilfunctions.run;
 const robots = utilfunctions.robots;
 
+
 var args = {
   copyright: "2017 Barton Phillips",
   author: "Barton Phillips http://www.bartonphillips.com",
@@ -30,7 +31,7 @@ router.get(['/','/index(\.(html|php))?'], function(req, res, next) {
 
   return run(function *(resume) {
     try {
-      var address = yield   dns.lookup('bartonphillips.dyndns.org', resume);
+      var address = yield dns.lookup('bartonphillips.dyndns.org', resume);
       console.log("ADDRESS:", address);
     
       //var admin = yield request.get('http://www.bartonlp.com/adminsites.txt', resume);
@@ -101,6 +102,19 @@ router.get('/aboutwebsite', function(req, res, next) {
 
   res.render('aboutwebsite', {
     args: args,
+  });
+});
+
+// Make a restfull path
+
+router.get('/getdb/:ip', function(req, res, next) {
+  var resorg = res;
+  request.post("http://www.bartonlp.org/ipcountry.php", {json: true, form: {ip: req.params.ip}},
+               function(err, res, body) {
+    if (!err && res.statusCode === 200) {
+      console.log("body: ", body);
+      resorg.render('getdb', {args: {body, args}});
+    }
   });
 });
 
