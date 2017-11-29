@@ -112,9 +112,15 @@ router.get('/getdb/:ip', function(req, res, next) {
   request.post("http://www.bartonlp.org/ipcountry.php", {json: true, form: {ip: req.params.ip}},
                function(err, res, body) {
     if (!err && res.statusCode === 200) {
-      console.log("body: ", body);
+      if(body.name == "-") {
+        body.name = "<span style='color: red'>was Not Found</span>";
+      } else {
+        body.name = "is from the <b><i>"+body.name+"</i></b>";
+      }
+      //console.log("body: ", body);
+
       resorg.render('getdb', {args: {body, args}});
-    }
+    } 
   });
 });
 

@@ -1,26 +1,17 @@
+// BLP 2017-03-07 -- This is a nodjs experment. It creates the
+// www.bartonlp.org:7000 webpage.
 
-function run(gen) {
-  var iter;
-  iter = gen(function(msg) { iter.next(msg); });
-  //console.log(typeof iter);
-  //var iter = gen(msg => iter.next(msg));
-  iter.next();
-}
+//const count = require('./routes/testasync.js').count;
+const query = require('./routes/testasync.js').query;
 
-run(function* (resume) {
-  console.log("before");
-  // both of the statements below are the same.
-  console.log(yield setTimeout(function() { resume( "hello"); }, 1000));
-  console.log(yield setTimeout(() => resume( "world"), 1000));
-  console.log("after");
+query("select * from barton.counter limit 10")
+.then(function(res) {
+  for(ar of res) {
+    console.log("%s %s", ar.lasttime, ar.filename);
+  }
+  process.exit()
+})
+.catch(function(e) {
+  console.log(e);
+  process.exit();
 });
-
-function *foo(x,y) {
-  return x * y;
-}
-
-var it = foo( 6, 7 );
-console.log(it);
-var res = it.next();
-
-console.log(res.value);		// 42
