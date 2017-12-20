@@ -1,8 +1,11 @@
 /* Utility Functions */
 
 const mysql = require('promise-mysql2');
-const fs = require('await-fs');
+//const fs = require('await-fs');
 //const fs = require('fs');
+const promise = require('bluebird');
+const fs = promise.promisifyAll(require('fs'));
+//console.log("fs:", fs);
 
 // Do a mysql query
 
@@ -40,43 +43,54 @@ exports.query = query;
 exports.robots = async function(site, req) {
   var agent = req.headers['user-agent'];
   var ip = req._remoteAddress.replace(/::.*?:/, '');
-
-  try {
-    //console.log("try insert");
-    var result = await query("insert into barton.bots (ip, agent, count, robots, who, creation_time, lasttime) "+
-                             "values(?, ?, 1, 1, ?, now(), now())", [ip, agent, site]);
-  } catch(err) {
-    if(err.errno == 1062) { // dup key
-      //console.log("catch dup key");
-      var who = await query("select who from barton.bots where ip=? and agent=?", [ip, agent]);
-      who = who[0].who;
-      if(!who) {
-        who = site;
-      }
-
-      if(who.indexOf(site) == -1) {
-        who += ', ' + site;
-      }
-
-      result = await query("update barton.bots set robots=robots | 2, who=?, "+
-                           "count=count+1, lasttime=now() "+
-                           "where ip=? and agent=?", [who, ip, agent]);
-    }
-  }
-
   var robotsFile = site+".robots.txt";
-  /*
-  var read = async function(file) {
-    return await new Promise(function(ok, fail) {
-      fs.readFile(file, 'utf8', function(err, data) {
-        //console.log("promise:", data);
-        if(err) fail(err);
-        ok(data);
-      });
-    });
-  }
-  return read(robotsFile);
-  */
-  
-  return await fs.readFile(robotsFile, 'utf8');
+
+  console.log("try insert");
+/*  var result = query("insert into barton.bots (ip, agent, count, robots, who, creation_time, lasttime) "+
+                     "values(?, ?, 1, 1, ?, now(), now())", [ip, agent, site]);
+*/
+   
+    var result = await query("select current_date() as date");
+    result.then(() => {
+    console.log("then robotsFile:", robotsFile);
+    return async function() {
+      var ret = fs.readFileAsync(robotsFile, 'utf8');
+      console.log("read:", ret);
+      return ret;
+    }
+  }).catch(err => {
+    console.log("async 1:", err);
+
+    return async function(err) {
+      console.log("async 2:", err);
+
+      if(err.errno == 1062) {
+        console.log("catch dup key:", err.errno);
+
+        var who = await query("select who from barton.bots where ip=? and agent=?", [ip, agent]);
+        who = who[0].who;
+        console.log("Who:", who);
+      
+        if(!who) {
+          who = site;
+        }
+
+        if(who.indexOf(site) == -1) {
+          who += ', ' + site;
+        }
+
+        result = await query("update barton.bots set robots=robots | 2, who=?, "+
+                             "count=count+1, lasttime=now() "+
+                             "where ip=? and agent=?", [who, ip, agent]);
+
+        console.log("result2:", result);
+
+        return fs.readFileAsync(robotsFile, 'utf8')
+      } else {
+        console.log("something else:", err);
+        return err;
+      }
+    }
+  });
 }
+
