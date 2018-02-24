@@ -1,25 +1,19 @@
 /* Utility Functions */
 
 const mysql = require('promise-mysql2');
-//const fs = require('await-fs');
-//const fs = require('fs');
-const promise = require('bluebird');
-const fs = promise.promisifyAll(require('fs'));
-//console.log("fs:", fs);
 
 // Do a mysql query
 
 const query = function(sql, value) {
   // First we must return from createConnection()
+
   return mysql.createConnection({
-    // We are useing LOCALHOST not bartonlp.com!
+    // We are using LOCALHOST not bartonlp.com!
     host: "localhost",
     user: "barton",
     password: "7098653",
-    //socketPath: "/var/run/mysqld/mysqld.sock", // for local host,
     database: "barton",
   }).then(conn => {
-    //console.log("sql: %s, value: %s", sql, value);
     // Now we need to return from query
     return conn.query(sql, value).then(([rows]) => {
       conn.end();

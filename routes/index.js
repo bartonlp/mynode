@@ -61,9 +61,9 @@ router.get('/howitworks', function(req, res, next) {
     try {
       var app = yield fs.readFile("app.js", resume);
       var index = yield fs.readFile("routes/index.js", resume);
-      var views = yield fs.readFile("views.old/index.jade", resume);
-      var how = yield fs.readFile("views.old/howitworks.jade", resume);
-      var layout = yield fs.readFile("views.old/layout.jade", resume);
+      var views = yield fs.readFile("views.jade/index.jade", resume);
+      var how = yield fs.readFile("views.jade/howitworks.jade", resume);
+      var layout = yield fs.readFile("views.jade/layout.jade", resume);
       var utils = yield fs.readFile("routes/utilfunctions.js", resume);
     } catch(err) {
       return next(err); //new Error("Error: "+err));

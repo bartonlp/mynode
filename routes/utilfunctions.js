@@ -205,22 +205,19 @@ exports.count = function(req, cb) {
 // Get last modified time
 
 exports.mtime = function(pugfile) {
-  // we are using the views.old which has .jade not .pug files
-/*
-return String(new Date(fs.statSync("/var/www/mynode/views/"+pugfile+".pug").mtime)).replace(/GMT.*? /, '');
-*/
-
+  // we are using the views.jade which has .jade not .pug files
   // Note: mtime has '<date> GMT-nnnn (PDT)' and we want just the (PDT)
   // after the GMT-nnnn
-  
-  var stat = String(new Date(fs.statSync("/var/www/mynode/views.old/"+pugfile+".jade").mtime));
+
+  var stat = String(new Date(fs.statSync("/var/www/mynode/views.jade/"+pugfile+".jade").mtime));
   //console.log("statSync: ", stat);
   return stat.replace(/GMT.*? /, '');
 }
 
-exports.run = function(gen, iter) {
-  (iter = gen((err, data) => (err && iter.throw(err)) || iter.next(data))).next();
-}
+exports.run = run;
+//function(gen, iter) {
+//  (iter = gen((err, data) => (err && iter.throw(err)) || iter.next(data))).next();
+//}
 
 exports.robots = function(site, req, cb) {
   var agent = req.headers['user-agent'];
