@@ -15,7 +15,7 @@ const robots = utilfunctions.robots;
 
 
 var args = {
-  copyright: "2017 Barton Phillips",
+  copyright: "2018 Barton Phillips",
   author: "Barton Phillips http://www.bartonphillips.com",
   address: "2701 Amhurst Blvd. #12A, New Bern, North Carolina 28562",
   desc: "node.js example",
