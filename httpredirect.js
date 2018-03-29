@@ -4,7 +4,8 @@
 const fs = require('fs'),
 net = require('net'),
 http = require('http'),
-https = require('https'),
+//https = require('https'),
+https = require('spdy'),
 app = require('./app');
 
 var port = normalizePort(process.env.PORT || '7000');
@@ -15,8 +16,11 @@ var redirectAddress = port + 1;
 var httpsAddress = port + 2;
 
 var httpsOptions = {
-  key: fs.readFileSync('./privkey.pem'),
-  cert: fs.readFileSync('./fullchain.pem')
+  // /etc/letsencrypt/live and /etc/letsencrypt/archive need to have
+  // /group=barton and chmod g+rw.
+  // They are normally group=root and group has no permissions.
+  key: fs.readFileSync('/etc/letsencrypt/live/bartonlp.org/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/bartonlp.org/fullchain.pem')
 };
 
 const netserver = net.createServer(tcpConnection).listen(baseAddress);
