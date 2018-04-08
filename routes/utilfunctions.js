@@ -2,7 +2,9 @@
 
 const mysql = require('mysql');
 const fs = require('fs');
-const pool = require('../routes/createpool.js').pool;
+const path = require('path');
+const logger = require(path.join(__dirname, '../logger.js'));
+const pool = require(path.join(__dirname, '../routes/createpool.js')).pool;
 
 // Do a mysql query
 
@@ -14,7 +16,7 @@ const query = function(sql, value, cb) {
 
   pool.getConnection(function(err, con) {
     if(err){
-      console.log('Error connecting to Db');
+      logger.debug('Error connecting to Db');
       return cb(err);
     }
 
@@ -24,13 +26,8 @@ const query = function(sql, value, cb) {
     // the form 'select count from barton.counter where site=?'
     
     con.query(sql, value, function(err, result) {
-      // We don't want this message printed.
-      //if(err) {
-      //  console.log("SQLERROR", err);
-      //}
-
       con.release();
-      //console.log("RESULT", result);
+      //logger.debug("RESULT", result);
       return cb(err, result);
     });
   });
@@ -209,8 +206,8 @@ exports.mtime = function(pugfile) {
   // Note: mtime has '<date> GMT-nnnn (PDT)' and we want just the (PDT)
   // after the GMT-nnnn
 
-  var stat = String(new Date(fs.statSync("/var/www/mynode/views.jade/"+pugfile+".jade").mtime));
-  //console.log("statSync: ", stat);
+  var stat = String(new Date(fs.statSync(pugfile).mtime));
+  //logger.debug("statSync: ", stat);
   return stat.replace(/GMT.*? /, '');
 }
 
@@ -225,12 +222,12 @@ exports.robots = function(site, req, cb) {
   
   return run(function* (resume) {
     try {
-      console.log("try insert");
+      logger.debug("try insert");
       var result = yield query("insert into barton.bots (ip, agent, count, robots, who, creation_time, lasttime) "+
                                "values(?, ?, 1, 1, ?, now(), now())", [ip, agent, site], resume);
     } catch(err) {
       if(err.errno == 1062) { // dup key
-        console.log("catch dup key");
+        logger.debug("catch dup key");
         var who = (yield query("select who from barton.bots where ip=? and agent=?", [ip, agent], resume))[0].who;
         if(!who) {
           who = site;
@@ -248,7 +245,7 @@ exports.robots = function(site, req, cb) {
 
     try {
       var robotsFile = site+".robots.txt";
-      var robottxt = yield fs.readFile("/var/www/mynode/routes/"+robotsFile, resume);
+      var robottxt = yield fs.readFile(path.join(__dirname, robotsFile), 'utf8', resume);
       return cb(null, robottxt);
     } catch(err) {
       return cb(err);

@@ -1,0 +1,23 @@
+# systemd service to start node ./httpredirect.js
+# Copy this to /etc/systemd/system/
+# You should run:
+#  sudo systemctl daemon-reload # always do this first
+#  sudo systemctl enable mynode.service # this make this start on reboot.
+#  sudo systemctl start mynode.service # start the service
+# To stop the service run:
+#  sudo systemctl stop mynode.service # stop the service
+#
+[Unit]
+Description=mynode service. Start bartonlp.org:7000 as a webserver
+After=network.target
+
+[Service]
+# type=simple
+Environment=LOG_LEVEL=info
+ExecStart=/var/www/mynode/httpredirect.js
+Restart=on-failure
+RestartSec=10sec
+User=barton
+
+[Install]
+WantedBy=multi-user.target

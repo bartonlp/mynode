@@ -1,12 +1,14 @@
+#! /usr/bin/env node
 // Proxy port 7000
 // If protical is http to http on 7001 and https on 7002
 
 const fs = require('fs'),
 net = require('net'),
 http = require('http'),
-//https = require('https'),
 https = require('spdy'),
-app = require('./app');
+path = require('path'),
+logger = require(path.join(__dirname,"logger.js"));
+app = require(path.join(__dirname, 'app'));
 
 var port = normalizePort(process.env.PORT || '7000');
 app.set('port', port);
@@ -27,8 +29,8 @@ const netserver = net.createServer(tcpConnection).listen(baseAddress);
 const httpserver = http.createServer(httpConnection).listen(redirectAddress);
 const server = https.createServer(httpsOptions, app).listen(httpsAddress);
 
-netserver.on('error', error => console.log("net error: ", error));
-httpserver.on('error', error => console.log("http error: ", error));
+netserver.on('error', error => logger.error("net error: ", error));
+httpserver.on('error', error => logger.error("http error: ", error));
 
 server.on('error', onError);
 server.on('listening', onListening);
@@ -36,7 +38,7 @@ server.on('listening', onListening);
 function tcpConnection(conn) {
   conn.on('error', (err) => {
     let dt = new Date();
-    console.log("tcpConnection (" +dt+ ") Error.stack: ", err.stack);
+    logger.error("tcpConnection (" +dt+ ") Error.stack: ", err.stack);
   });
 
   // do this once. It is like 'on' but only 'once'
@@ -70,7 +72,7 @@ function httpConnection(req, res) {
 
 function onError(error) {
   if(error.syscall !== 'listen') {
-    console.log("not listen: ", error.syscall);
+    logger.error("not listen: ", error.syscall);
     throw error;
   }
 
@@ -81,15 +83,15 @@ function onError(error) {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
+      logger.error(bind + ' requires elevated privileges');
       //process.exit(1);
       break;
     case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
+      logger.error(bind + ' is already in use');
       //process.exit(1);
       break;
     default:
-      console.error("sitch default", error);
+      logger.error("sitch default", error);
       throw error;
   }
 }
@@ -99,7 +101,7 @@ function onError(error) {
  */
 
 function onListening() {
-  console.log(`Listening on: net ${port}, http ${port +1}, https ${port +2}`);
+  logger.info(`mynode listening on: net ${port}, http ${port +1}, https ${port +2}`);
 }
 
 

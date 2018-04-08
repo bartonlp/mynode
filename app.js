@@ -1,17 +1,19 @@
 // BLP 2017-03-07 -- This is a nodjs experment. It creates the
 // www.bartonlp.org:7000 webpage.
 
+const fs = require('fs');
 const express = require('express');
 const path = require('path');
-const logger = require('morgan');
+const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const favicon = require('serve-favicon');
-const count = require('./routes/utilfunctions.js').count;
+const count = require(path.join(__dirname, 'routes/utilfunctions.js')).count;
+const logger = require(path.join(__dirname, 'logger.js'));
 
 // get the routing unit
 
-const routes = require('./routes/index');
+const routes = require(path.join(__dirname, 'routes/index.js'));
 const app = express();
 
 // view engine setup
@@ -22,22 +24,24 @@ const app = express();
 app.set('views', path.join(__dirname, 'views.jade'));
 app.set('view engine', 'jade');
 
-//app.use(logger(...)); // Logs info to the console.log in 'development' mode
-
-app.use(logger('[:date[clf]] :remote-addr :remote-user :method :url :status :res[content-length] ":user-agent"'));
+if(process.env.DEBUG == 'true') { // NOTE this is a string.
+  app.use(morgan('combined'));
+} else {
+  const stream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'});
+  app.use(morgan('combined', {stream: stream}));
+}
 
 // Catch all
 
 app.use(function(req, res, next) {
-  console.log("hostname: ", req.hostname);
+  logger.debug("hostname: %s", req.hostname);
+  
   if(req.hostname == 'www.bartonlp.org' ||
      req.hostname == 'mynode.bartonlp.org') {
     next();
   } else {
-    console.log("headers.host: ", req.headers.host);
-    console.log("Hostname: ", req.hostname);
-    console.log("Org Url: %s, Url: %s", req.originalUrl, req.url);
-    console.log("ERROR: Return");
+    logger.error("headers.host: %s\nHostname: %s\nOrg Url: %s, Url: %s\nERROR: Return",
+                 req.headers.host, req.hostname, req.originalUrl, req.url);
     next(new Error('Bad Route'));
   }
 });
@@ -80,7 +84,7 @@ app.use('/', routes);
 // catch 404 and forward to error handler
 
 app.use(function(req, res, next) {
-  console.log("req:", req.url);
+  logger.debug("req: %s", req.url);
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
@@ -96,7 +100,7 @@ app.use(function(req, res, next) {
 if(app.get('env') === 'development') {
   // Error middle ware has 4 args! Must have 'next' even if not used.
   app.use(function(err, req, res, next) {
-    console.log("REQ: ", req.url);
+    logger.debug("REQ: %s", req.url);
     
     res.status(err.status || 500);
     if(err.status != 404) {
@@ -120,9 +124,7 @@ app.use(function(err, req, res, next) {
   if(err.status != 404) {
     req.url = null;
   }
-  console.log("MSG: %s", err.message);
-  console.log("URL: %s", req.url);
-  console.log("ERROR: ", err);
+  logger.error("MSG: %s\nURL: %s\nERROF: %s", err.message, req.url, err);
   
   res.render('error', {
     message: err.message,
