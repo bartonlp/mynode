@@ -42,7 +42,8 @@ function tcpConnection(conn) {
   });
 
   // do this once. It is like 'on' but only 'once'
-  
+
+  logger.info("conn:", conn);
   conn.once('data', function (buf) {
     // A TLS handshake record starts with byte 22.
     // If the handshake is 22 (https)

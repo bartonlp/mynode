@@ -8,13 +8,13 @@
 #  sudo systemctl stop mynode.service # stop the service
 #
 [Unit]
-Description=mynode service. Start bartonlp.org:7000 as a webserver
+Description=mynode service. Start https://www.bartonlp.org:7000 as a https server and http://www.bartonlp.org:7001 as an http server
 After=network.target
 
 [Service]
 # type=simple
 Environment=LOG_LEVEL=info
-ExecStart=/var/www/mynode/httpredirect.js
+ExecStart=/var/www/mynode/both.js
 Restart=on-failure
 RestartSec=10sec
 User=barton

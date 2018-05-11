@@ -34,7 +34,7 @@ router.get(['/','/index(\.(html|php))?'], function(req, res, next) {
   return run(function *(resume) {
     try {
       var address = yield dns.lookup('bartonphillips.dyndns.org', resume);
-      logger.debug("ADDRESS: %s", address);
+      logger.debug("MY ADDRESS: %s", address);
     } catch(err) {
       logger.debug("NOT bartonphillips.dyndns.org");
     }
@@ -43,7 +43,7 @@ router.get(['/','/index(\.(html|php))?'], function(req, res, next) {
     args.banner = "Node.js Page";
     args.port = port;
     args.mtime = mtime(path.join(__dirname, "../views.jade/index.jade"));
-      
+
     res.render('index', {
       args: args,
     });
@@ -53,7 +53,9 @@ router.get(['/','/index(\.(html|php))?'], function(req, res, next) {
 /* GET howitworks */
 
 router.get('/howitworks', function(req, res, next) {
+  console.log("howitworks");
   args.footer = req.cnt;
+
   return run(function *(resume) {
     try {
       var app = yield fs.readFile(path.join(__dirname, "../app.js"), resume);

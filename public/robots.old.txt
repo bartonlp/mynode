@@ -1,4 +1,0 @@
-User-agent: *
-Disallow: What
-
-Sitemap: http://www.bartonlp.org:7000/Sitemap.xml

@@ -81,7 +81,7 @@ exports.count = function(req, cb) {
 
     try {
       var agent = req.headers['user-agent'];
-      var ip = req._remoteAddress.replace(/::.*?:/, '');
+      var ip = req.ip.replace(/::.*?:/, '');
 
       var sql = "insert into counter (filename, site, ip, agent, count, lasttime) "+
                 "values(?, ?, ?, ?, 1, now()) "+
@@ -218,16 +218,14 @@ exports.run = run;
 
 exports.robots = function(site, req, cb) {
   var agent = req.headers['user-agent'];
-  var ip = req._remoteAddress.replace(/::.*?:/, '');
+  var ip = req.ip.replace(/::.*?:/, '');
   
   return run(function* (resume) {
     try {
-      logger.debug("try insert");
       var result = yield query("insert into barton.bots (ip, agent, count, robots, who, creation_time, lasttime) "+
                                "values(?, ?, 1, 1, ?, now(), now())", [ip, agent, site], resume);
     } catch(err) {
       if(err.errno == 1062) { // dup key
-        logger.debug("catch dup key");
         var who = (yield query("select who from barton.bots where ip=? and agent=?", [ip, agent], resume))[0].who;
         if(!who) {
           who = site;
