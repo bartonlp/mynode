@@ -38,35 +38,38 @@ if(process.env.DEBUG == 'true') { // NOTE this is a string.
 app.use(function(req, res, next) {
   logger.debug("hostname: %s", req.hostname);
   let userAgent = req.get('User-Agent');
-  let re = /^.*(msie\s*\d*).*$/i;
+  let re = /^.*(?:(msie\s*\d*)|(trident\/\s*\d*)).*$/i;
   let m = userAgent.match(re);
   if(m) {
-    let msg = `
+    let which = m[1] ? m[1] : m[2];
+    if(m) {
+      let msg = `
 <!DOCTYPE html>
 <html>
 <head>
   <title>NO GOOD MSIE</title>
 </head>
 <body>
-<div style="background-color: red; color: white; padding: 10px;">
-Your browser's <b>User Agent String</b> says it is:<br>
-${m[0]}<br>
-Sorry you are using Microsoft's Broken Internet Explorer (${m[1]}).
-</div>
-<div>
-<p>You should upgrade to Windows 10 and Edge if you must use MS-Windows.</p>
-<p>Better yet get <a href="https://www.google.com/chrome/"><b>Google Chrome</b></a>
-or <a href="https://www.mozilla.org/en-US/firefox/"><b>Mozilla Firefox</b>.</p></a>
-These two browsers will work with almost all previous
-versions of Windows and are very up to date.</p>
-<b>Better yet remove MS-Windows from your
-system and install Linux instead.
-Sorry but I just can not continue to support ancient versions of browsers.</b></p>
-</div>
+  <div style="background-color: red; color: white; padding: 10px;">
+  Your browser's <b>User Agent String</b> says it is:<br>
+  ${m[0]}<br>
+  Sorry you are using Microsoft's Broken Internet Explorer (${which}).
+  </div>
+  <div>
+  <p>You should upgrade to Windows 10 and Edge if you must use MS-Windows.</p>
+  <p>Better yet get <a href="https://www.google.com/chrome/"><b>Google Chrome</b></a>
+  or <a href="https://www.mozilla.org/en-US/firefox/"><b>Mozilla Firefox</b>.</p></a>
+  These two browsers will work with almost all previous
+  versions of Windows and are very up to date.</p>
+  <b>Better yet remove MS-Windows from your
+  system and install Linux instead.
+  Sorry but I just can not continue to support ancient versions of browsers.</b></p>
+  </div>
 </body>
 </html>`;
-    res.send(msg);
-    return;
+      res.send(msg);
+      return;
+    }
   }
 
   if(req.hostname == 'www.bartonlp.org' ||
