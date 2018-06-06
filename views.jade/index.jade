@@ -1,11 +1,14 @@
 extends layout.jade
 
-append stylesheets
+block link
+  link(rel="canonical" href="https://www.bartonphillips.com")
+
+block stylesheets
   style.
     #show {width: 20rem; margin: auto;}
     #show img {width: 100%;}
 
-append jscripts
+block jscripts
   // Because the images are done via java script the only code that needs to be 
     added is here in the jade file. The dobanner function is from ximage.js and 
     puts its code in #show below.

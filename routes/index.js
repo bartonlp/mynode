@@ -19,7 +19,7 @@ const robots = utilfunctions.robots;
 var args = {
   copyright: "2018 Barton Phillips",
   author: "Barton Phillips http://www.bartonphillips.com",
-  address: "2701 Amhurst Blvd. #12A, New Bern, North Carolina 28562",
+  address: "Williamson, North Carolina",
   desc: "node.js example",
   msg: "Counter Reset: Feb. 4, 2017",
   site: "Node",
@@ -96,6 +96,8 @@ router.get("/robots.txt", function(req, res, next) {
 router.get('/aboutwebsite', function(req, res, next) {
   args.mtime = mtime(path.join(__dirname, "../views.jade/aboutwebsite.jade"));
   args.footer = req.cnt;
+  args.title = 'About Website';
+  args.banner = 'About Website';
 
   res.render('aboutwebsite', {
     args: args,
@@ -107,7 +109,8 @@ router.get('/aboutwebsite', function(req, res, next) {
 router.get('/getdb/:ip', function(req, res, next) {
   args.mtime = mtime(path.join(__dirname, "../views.jade/getdb.jade"));
   args.footer = req.cnt;
-  //console.log("footer", args.footer);
+  args.title = 'IP to Country';
+  args.banner = 'IP to Country';
   
   var resorg = res;
   request.post("http://www.bartonlp.org/ipcountry.php", {json: true, form: {ip: req.params.ip}},
